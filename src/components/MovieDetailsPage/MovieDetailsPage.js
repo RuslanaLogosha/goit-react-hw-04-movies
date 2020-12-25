@@ -1,15 +1,25 @@
 import { useState, useEffect } from 'react';
-import { useParams, Route, NavLink, useRouteMatch } from 'react-router-dom';
+import {
+  useParams,
+  Route,
+  NavLink,
+  useRouteMatch,
+  useHistory,
+  useLocation,
+} from 'react-router-dom';
 import Cast from '../Cast';
 import Reviews from '../Reviews';
 
 import moviesApi from '../../services/moviesApi';
 
 export default function MovieDetailsPage() {
-  const { movieId } = useParams();
-  const [movie, setMovie] = useState(null);
-  const { url, path } = useRouteMatch();
   const srcBaseUrl = 'https://image.tmdb.org/t/p/w500';
+  const { movieId } = useParams();
+  const { url, path } = useRouteMatch();
+  const history = useHistory();
+  const location = useLocation();
+
+  const [movie, setMovie] = useState(null);
   const [isVisibleCast, setIsVisibleCast] = useState(false);
   const [isVisibleReviews, setIsVisibleReviews] = useState(false);
 
@@ -35,29 +45,58 @@ export default function MovieDetailsPage() {
     setIsVisibleReviews(true);
   };
 
+  const goBack = () => {
+    // history.goBack();
+    history.push(location.state.from);
+  };
+
+  console.log(location.state.from);
+
   return (
     <>
+      <button onClick={goBack}>
+        <span>Go Back</span>
+      </button>
       {movie && (
         <>
           <img src={`${srcBaseUrl}${movie.poster_path}`} alt={movie.title} />
           <h3>
             {movie.title}({movie.release_date.split('-')[0]})
           </h3>
-          <span>User Score:</span>
+          <span>User Score: {movie.vote_average * 10}%</span>
           <h2>Overview</h2>
           <span>{movie.overview}</span>
           {<h3>Genres</h3>}
           {<span>{movie.genres.map(genre => genre.name).join(' ')}</span>}
           <hr />
           <span>Additional information</span>
+          <span role="img" aria-label="face emoji">
+            👇🏻
+          </span>
           <ul>
             <li>
-              <NavLink to={`${url}/cast`} onClick={makeVisibleCast}>
+              <NavLink
+                to={{
+                  pathname: `${url}/cast`,
+                  state: {
+                    from: location.state.from,
+                  },
+                }}
+                onClick={makeVisibleCast}
+              >
                 Cast
               </NavLink>
             </li>
             <li>
-              <NavLink to={`${url}/reviews`} onClick={makeVisibleReviews}>
+              <NavLink
+                to={{
+                  pathname: `${url}/reviews`,
+                  state: {
+                    from: location.state.from,
+                  },
+                }}
+                onClick={makeVisibleReviews}
+              >
                 Reviews
               </NavLink>
             </li>

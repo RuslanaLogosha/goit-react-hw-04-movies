@@ -68,12 +68,33 @@ async function fetchMovieReviews(movie_id) {
     new Error('No response from server');
   }
 }
+
+async function fetchMoviesByQuery(query) {
+  try {
+    const config = {
+      url: `https://api.themoviedb.org/3/search/movie`,
+      params: {
+        api_key: key,
+        language: 'en-US',
+        query,
+      },
+    };
+
+    const { data } = await axios(config);
+    return data.results;
+  } catch (error) {
+    new Error('No response from server');
+  }
+}
+
 const api = {
   fetchTrendingMovies,
   fetchMovieDetails,
   fetchMovieCast,
   fetchMovieReviews,
+  fetchMoviesByQuery,
 };
+
 export default api;
 
 //___________________________________________________________________________________
