@@ -35,7 +35,45 @@ async function fetchMovieDetails(movie_id) {
   }
 }
 
-const api = { fetchTrendingMovies, fetchMovieDetails };
+async function fetchMovieCast(movie_id) {
+  try {
+    const config = {
+      url: `https://api.themoviedb.org/3/movie/${movie_id}/credits`,
+      params: {
+        api_key: key,
+        language: 'en-US',
+      },
+    };
+
+    const { data } = await axios(config, movie_id);
+    return data.cast;
+  } catch (error) {
+    new Error('No response from server');
+  }
+}
+
+async function fetchMovieReviews(movie_id) {
+  try {
+    const config = {
+      url: `https://api.themoviedb.org/3/movie/${movie_id}/reviews`,
+      params: {
+        api_key: key,
+        language: 'en-US',
+      },
+    };
+
+    const { data } = await axios(config, movie_id);
+    return data.results;
+  } catch (error) {
+    new Error('No response from server');
+  }
+}
+const api = {
+  fetchTrendingMovies,
+  fetchMovieDetails,
+  fetchMovieCast,
+  fetchMovieReviews,
+};
 export default api;
 
 //___________________________________________________________________________________
