@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import {
   useParams,
   Route,
@@ -7,10 +7,12 @@ import {
   useHistory,
   useLocation,
 } from 'react-router-dom';
-import Cast from '../Cast';
-import Reviews from '../Reviews';
-
 import moviesApi from '../../services/moviesApi';
+
+const Cast = lazy(() => import('../Cast' /* webpackChunkName: "Cast" */));
+const Reviews = lazy(() =>
+  import('../Reviews' /* webpackChunkName: "Reviews" */),
+);
 
 export default function MovieDetailsPage() {
   const srcBaseUrl = 'https://image.tmdb.org/t/p/w500';
@@ -47,10 +49,11 @@ export default function MovieDetailsPage() {
 
   const goBack = () => {
     // history.goBack();
-    history.push(location.state.from);
+    if (location.state && location.state.from) {
+      return history.push(location.state.from);
+    }
+    history.push('/');
   };
-
-  console.log(location.state.from);
 
   return (
     <>
@@ -78,9 +81,6 @@ export default function MovieDetailsPage() {
               <NavLink
                 to={{
                   pathname: `${url}/cast`,
-                  state: {
-                    from: location.state.from,
-                  },
                 }}
                 onClick={makeVisibleCast}
               >
@@ -91,9 +91,6 @@ export default function MovieDetailsPage() {
               <NavLink
                 to={{
                   pathname: `${url}/reviews`,
-                  state: {
-                    from: location.state.from,
-                  },
                 }}
                 onClick={makeVisibleReviews}
               >
@@ -103,13 +100,15 @@ export default function MovieDetailsPage() {
           </ul>
           <hr />
 
-          <Route path={`${path}/:cast`}>
-            {movie && isVisibleCast && <Cast />}
-          </Route>
+          <Suspense fallback={<h1>Загружаем...</h1>}>
+            <Route path={`${path}/:cast`}>
+              {movie && isVisibleCast && <Cast />}
+            </Route>
 
-          <Route path={`${path}/:reviews`}>
-            {movie && isVisibleReviews && <Reviews />}
-          </Route>
+            <Route path={`${path}/:reviews`}>
+              {movie && isVisibleReviews && <Reviews />}
+            </Route>
+          </Suspense>
         </>
       )}
     </>
