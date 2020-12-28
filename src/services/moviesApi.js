@@ -1,14 +1,18 @@
 import axios from 'axios';
 
-const key = '3b0a0f3678b03bfe7113d836939cb420';
+const BASE_URL = 'https://api.themoviedb.org/3/';
+const API_KEY = '3b0a0f3678b03bfe7113d836939cb420';
+
+axios.defaults.baseURL = BASE_URL;
+axios.defaults.params = {
+  api_key: API_KEY,
+  language: 'en-US',
+};
 
 const fetchTrendingMovies = async () => {
   try {
     const config = {
-      url: 'https://api.themoviedb.org/3/trending/movie/week',
-      params: {
-        api_key: key,
-      },
+      url: `${BASE_URL}trending/movie/week`,
     };
 
     const { data } = await axios(config);
@@ -21,11 +25,7 @@ const fetchTrendingMovies = async () => {
 async function fetchMovieDetails(movie_id) {
   try {
     const config = {
-      url: `https://api.themoviedb.org/3/movie/${movie_id}`,
-      params: {
-        api_key: key,
-        language: 'en-US',
-      },
+      url: `${BASE_URL}movie/${movie_id}`,
     };
 
     const { data } = await axios(config, movie_id);
@@ -38,11 +38,7 @@ async function fetchMovieDetails(movie_id) {
 async function fetchMovieCast(movie_id) {
   try {
     const config = {
-      url: `https://api.themoviedb.org/3/movie/${movie_id}/credits`,
-      params: {
-        api_key: key,
-        language: 'en-US',
-      },
+      url: `${BASE_URL}movie/${movie_id}/credits`,
     };
 
     const { data } = await axios(config, movie_id);
@@ -55,11 +51,7 @@ async function fetchMovieCast(movie_id) {
 async function fetchMovieReviews(movie_id) {
   try {
     const config = {
-      url: `https://api.themoviedb.org/3/movie/${movie_id}/reviews`,
-      params: {
-        api_key: key,
-        language: 'en-US',
-      },
+      url: `${BASE_URL}movie/${movie_id}/reviews`,
     };
 
     const { data } = await axios(config, movie_id);
@@ -72,10 +64,8 @@ async function fetchMovieReviews(movie_id) {
 async function fetchMoviesByQuery(query) {
   try {
     const config = {
-      url: `https://api.themoviedb.org/3/search/movie`,
+      url: `${BASE_URL}search/movie`,
       params: {
-        api_key: key,
-        language: 'en-US',
         query,
       },
     };
