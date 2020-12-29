@@ -12,7 +12,7 @@ axios.defaults.params = {
 const fetchTrendingMovies = async () => {
   try {
     const config = {
-      url: `${BASE_URL}trending/movie/week`,
+      url: `trending/movie/week`,
     };
 
     const { data } = await axios(config);
@@ -25,7 +25,7 @@ const fetchTrendingMovies = async () => {
 async function fetchMovieDetails(movie_id) {
   try {
     const config = {
-      url: `${BASE_URL}movie/${movie_id}`,
+      url: `movie/${movie_id}`,
     };
 
     const { data } = await axios(config, movie_id);
@@ -38,7 +38,7 @@ async function fetchMovieDetails(movie_id) {
 async function fetchMovieCast(movie_id) {
   try {
     const config = {
-      url: `${BASE_URL}movie/${movie_id}/credits`,
+      url: `movie/${movie_id}/credits`,
     };
 
     const { data } = await axios(config, movie_id);
@@ -51,7 +51,7 @@ async function fetchMovieCast(movie_id) {
 async function fetchMovieReviews(movie_id) {
   try {
     const config = {
-      url: `${BASE_URL}movie/${movie_id}/reviews`,
+      url: `movie/${movie_id}/reviews`,
     };
 
     const { data } = await axios(config, movie_id);
@@ -64,7 +64,7 @@ async function fetchMovieReviews(movie_id) {
 async function fetchMoviesByQuery(query) {
   try {
     const config = {
-      url: `${BASE_URL}search/movie`,
+      url: `search/movie`,
       params: {
         query,
       },
